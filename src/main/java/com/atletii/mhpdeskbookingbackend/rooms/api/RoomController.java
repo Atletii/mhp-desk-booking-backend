@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 
@@ -21,7 +19,7 @@ public class RoomController extends BaseResource {
 
     @GetMapping("/available/{day}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<RoomAvailability> getRoomAvailabilityPerDay(LocalDate day){
+    public ResponseEntity<RoomAvailability> getRoomAvailabilityPerDay(@PathVariable LocalDate day, @RequestHeader(name="Authorization") String token){
         return new ResponseEntity<>(roomService.getRoomAvailability(day), HttpStatus.OK);
     }
 }
