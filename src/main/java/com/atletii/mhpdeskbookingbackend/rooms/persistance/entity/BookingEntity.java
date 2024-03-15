@@ -22,8 +22,8 @@ public class BookingEntity extends BaseEntity {
     @ManyToOne
     private UserEntity user;
 
-    @OneToMany
-    private List<UserEntity> additionalUsers;
+//    @OneToMany
+//    private List<UserEntity> additionalUsers;
 
-    private ZonedDateTime to, from;
+    private ZonedDateTime bookedTo, bookedFrom;
 }
