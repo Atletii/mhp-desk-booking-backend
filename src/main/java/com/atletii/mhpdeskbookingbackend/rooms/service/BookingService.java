@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
         return bookingsFromOneDay.stream().map(bookingMapper::mapToModel).collect(Collectors.toList());
     }
 
-    public Booking createBooking(Room roomToBook, User user, ZonedDateTime bookedFrom, ZonedDateTime bookedTo) {
+    public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo) {
         Booking booking = new Booking(roomToBook, user, bookedFrom, bookedTo);
         return this.save(booking);
     }

@@ -54,10 +54,10 @@ public class BookingController extends BaseResource {
     }
 
     //TODO create booking (@RB BookingDto)
-    @PostMapping("/createBooking")
-    public ResponseEntity<BookingDto> createBooking(@ResponseBody NewBookingDto newBookingDto){
-        Booking booking = bookingService.createBooking(newBookingDto.getRoomId(),newBookingDto.getBookedTo(),newBookingDto.getBookedTo());
-    }
+//    @PostMapping("/createBooking")
+//    public ResponseEntity<BookingDto> createBooking(@ResponseBody NewBookingDto newBookingDto){
+//        Booking booking = bookingService.createBooking(newBookingDto.getRoomId(),newBookingDto.getBookedTo(),newBookingDto.getBookedTo());
+//    }
 
 
 
