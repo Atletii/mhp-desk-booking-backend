@@ -4,6 +4,8 @@ import com.atletii.mhpdeskbookingbackend.common.api.BaseResource;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.BookingDto;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.NewBookingDto;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.BookingMapper;
+import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.RoomEntity;
+import com.atletii.mhpdeskbookingbackend.rooms.persistance.repository.RoomRepository;
 import com.atletii.mhpdeskbookingbackend.rooms.service.BookingService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ import java.util.stream.Collectors;
 public class BookingController extends BaseResource {
 
     private final BookingService bookingService;
+    private final RoomRepository roomRepository;
     private final BookingMapper bookingMapper;
     @GetMapping("/byDay/{day}")
     public ResponseEntity<List<BookingDto>> getBookingsByDay(@PathVariable LocalDate day){
@@ -55,11 +58,16 @@ public class BookingController extends BaseResource {
     }
 
     //TODO create booking (@RB BookingDto)
-//    @PostMapping("/createBooking")
-//    public ResponseEntity<BookingDto> createBooking(@ResponseBody NewBookingDto newBookingDto){
-//        Booking booking = bookingService.createBooking(newBookingDto.getRoomId(),newBookingDto.getBookedTo(),newBookingDto.getBookedTo());
-//    }
-
-
+    @PostMapping("/createBooking")
+    public ResponseEntity<BookingDto> createBooking(@RequestBody NewBookingDto newBookingDto){
+        Optional<RoomEntity> optionalRoom = roomRepository.findById(newBookingDto.getRoomId());
+        if(optionalRoom.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        else{
+            Booking booking = bookingService.createBooking(optionalRoom,newBookingDto.getBookedTo(),newBookingDto.getBookedTo());
+            return ResponseEntity.ok().body(bookingMapper.toDto(booking));
+        }
+    }
 
 }
