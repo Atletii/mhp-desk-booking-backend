@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +25,8 @@ public class BookingController extends BaseResource {
 
     private final BookingService bookingService;
     private final BookingMapper bookingMapper;
-    @GetMapping("/byDay")
-    public ResponseEntity<List<BookingDto>> getBookingsByDay(@RequestBody LocalDateTime day){
+    @GetMapping("/byDay/{day}")
+    public ResponseEntity<List<BookingDto>> getBookingsByDay(@PathVariable LocalDate day){
         List<Booking> bookingsFromOneDay = bookingService.getBookingByDay(day);
 
         return ResponseEntity.ok()

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -23,9 +24,9 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
     private final BookingMapper bookingMapper;
 
 
-    public List<Booking> getBookingByDay(LocalDateTime day){
+    public List<Booking> getBookingByDay(LocalDate day){
 
-        List<BookingEntity> bookingsFromOneDay= bookingRepository.findAllByBookedFrom(day);
+        List<BookingEntity> bookingsFromOneDay= bookingRepository.findAllByBookedFromAfterAndBookedToBefore(day.atStartOfDay(), day.atTime(23,59,59));
         return bookingsFromOneDay.stream().map(bookingMapper::mapToModel).collect(Collectors.toList());
     }
 
