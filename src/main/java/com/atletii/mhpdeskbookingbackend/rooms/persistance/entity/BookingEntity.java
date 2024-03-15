@@ -3,13 +3,11 @@ package com.atletii.mhpdeskbookingbackend.rooms.persistance.entity;
 import com.atletii.mhpdeskbookingbackend.common.persistence.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -25,5 +23,5 @@ public class BookingEntity extends BaseEntity {
 //    @OneToMany
 //    private List<UserEntity> additionalUsers;
 
-    private ZonedDateTime bookedTo, bookedFrom;
+    private LocalDateTime bookedTo, bookedFrom;
 }
