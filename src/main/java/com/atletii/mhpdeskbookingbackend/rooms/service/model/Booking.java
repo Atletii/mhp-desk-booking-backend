@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -18,5 +18,5 @@ public class Booking extends BaseEntityModel {
 
     private User user;
 
-    private ZonedDateTime bookedTo, bookedFrom;
+    private LocalDateTime bookedTo, bookedFrom;
 }
