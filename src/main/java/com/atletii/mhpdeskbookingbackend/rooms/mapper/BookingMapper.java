@@ -10,4 +10,6 @@ import org.mapstruct.Mapper;
 public interface BookingMapper extends BaseModelEntityMapper<Booking, BookingEntity> {
 
     BookingDto toDto(Booking model);
+
+
 }
