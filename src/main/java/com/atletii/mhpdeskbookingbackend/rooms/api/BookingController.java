@@ -45,7 +45,7 @@ public class BookingController extends BaseResource {
 
     @GetMapping("/allBookings")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<BookingDto>> getAllBookingsOfUser(@RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<List<BookingDto>> getAllBookingsOfUser(@RequestHeader(name = "localId") String token) {
         Optional<User> optionalUser = userService.findUserEntityByFirebaseId(token);
         if (optionalUser.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -69,7 +69,7 @@ public class BookingController extends BaseResource {
 
     @PostMapping("/createBooking")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<BookingDto> createBooking(@RequestBody NewBookingDto newBookingDto, @RequestHeader(name = "Authorization") String token) {
+    public ResponseEntity<BookingDto> createBooking(@RequestBody NewBookingDto newBookingDto, @RequestHeader(name = "localId") String token) {
         Optional<RoomEntity> optionalRoom = roomRepository.findById(newBookingDto.getRoomId());
         Optional<User> optionalUser = userService.findUserEntityByFirebaseId(token);
         if (optionalRoom.isEmpty()) {
