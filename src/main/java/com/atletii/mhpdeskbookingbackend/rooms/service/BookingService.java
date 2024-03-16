@@ -36,9 +36,9 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
         List<BookingEntity> bookingsFromOneDay= bookingRepository.findAllByBookedFromAfterAndBookedToBefore(day.atStartOfDay(), day.atTime(23,59,59));
         return bookingsFromOneDay.stream().map(bookingMapper::mapToModel).collect(Collectors.toList());
     }
-    public Page<Booking> getBookingsOfUser(User user, Pageable pageable){
-        Page<BookingEntity> allBooks = bookingRepository.findBookingEntitiesByUser(userMapper.mapToEntity(user), pageable);
-        return bookingMapper.mapToModel(allBooks);
+    public List<Booking> getBookingsOfUser(User user){
+        List<BookingEntity> allBooks = bookingRepository.findBookingEntitiesByUser(userMapper.mapToEntity(user));
+        return bookingMapper.mapToModels(allBooks);
     }
 
     public boolean checkIfRoomIsAvailable(RoomEntity room,LocalDateTime bookedFrom, LocalDateTime bookedTo){

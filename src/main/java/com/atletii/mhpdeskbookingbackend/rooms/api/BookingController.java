@@ -54,12 +54,12 @@ public class BookingController extends BaseResource {
 
     @GetMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Page<BookingDto>> getAllBookingsOfUser(@PageableDefault Pageable pageable, @RequestHeader(name = "localId") String token) {
+    public ResponseEntity<List<BookingDto>> getAllBookingsOfUser(@RequestHeader(name = "localId") String token) {
         Optional<User> optionalUser = userService.findUserEntityByFirebaseId(token);
         if (optionalUser.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else{
-            Page<Booking> allBookings = bookingService.getBookingsOfUser(optionalUser.get(), pageable);
+            List<Booking> allBookings = bookingService.getBookingsOfUser(optionalUser.get());
             return ResponseEntity.ok()
                     .body(bookingMapper.mapToDto(allBookings));
         }

@@ -16,8 +16,7 @@ public interface BookingMapper extends BaseModelEntityMapper<Booking, BookingEnt
 
     @Mapping(target = "room", source = "room.name")
     BookingDto toDto(Booking model);
-    default Page<BookingDto> mapToDto(Page<Booking> page) {
-        List<BookingDto> content = page.stream().map(this::toDto).toList();
-        return new PageImpl<>(content, page.getPageable(), page.getTotalElements());
+    default List<BookingDto> mapToDto(List<Booking> page) {
+        return page.stream().map(this::toDto).toList();
     }
 }

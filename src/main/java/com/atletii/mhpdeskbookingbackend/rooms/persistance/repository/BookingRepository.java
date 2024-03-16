@@ -17,7 +17,7 @@ import java.util.List;
 public interface BookingRepository extends BaseRepository<BookingEntity> {
      List<BookingEntity> findAllByBookedFrom(LocalDateTime bookedFrom);
      List<BookingEntity> findAllByBookedFromAfterAndBookedToBefore(LocalDateTime bookedFrom, LocalDateTime bookedTo);
-     Page<BookingEntity> findBookingEntitiesByUser(UserEntity user, Pageable pageable);
+     List<BookingEntity> findBookingEntitiesByUser(UserEntity user);
 
      //all Bookings from one room in a timeStamp
      @Query("SELECT b FROM BookingEntity b WHERE ((b.bookedFrom <= :to AND b.bookedTo >= :to) " +
