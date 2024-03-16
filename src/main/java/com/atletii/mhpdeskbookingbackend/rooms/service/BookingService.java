@@ -2,8 +2,10 @@ package com.atletii.mhpdeskbookingbackend.rooms.service;
 
 import com.atletii.mhpdeskbookingbackend.common.service.BaseEntityService;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.BookingMapper;
+import com.atletii.mhpdeskbookingbackend.rooms.mapper.RoomMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.UserMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.BookingEntity;
+import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.RoomEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.repository.BookingRepository;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Room;
@@ -34,6 +36,16 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
     public Page<Booking> getBookingsOfUser(User user, Pageable pageable){
         Page<BookingEntity> allBooks = bookingRepository.findBookingEntitiesByUser(userMapper.mapToEntity(user), pageable);
         return bookingMapper.mapToModel(allBooks);
+    }
+
+    public boolean checkIfRoomIsAvailable(RoomEntity room,LocalDateTime bookedFrom, LocalDateTime bookedTo){
+        List<BookingEntity> allRoomBookings = bookingRepository.findAllByByRoomAndTimeRange(room, bookedFrom, bookedTo);
+        if(allRoomBookings.isEmpty()){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
     public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo) {
