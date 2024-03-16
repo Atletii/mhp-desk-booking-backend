@@ -19,7 +19,7 @@ public class UserController extends BaseResource {
     private final UserService userService;
 
     @PostMapping()
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> signUp(@RequestBody UserDto newUserDto){
         if(userService.existsEmail(newUserDto.getEmail())) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

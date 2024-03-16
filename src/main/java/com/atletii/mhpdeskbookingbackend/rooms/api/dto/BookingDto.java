@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class BookingDto extends BaseEntityDto {
-    private RoomDto room;
+    private String room;
     private LocalDateTime bookedTo, bookedFrom;
 }
