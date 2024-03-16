@@ -5,7 +5,6 @@ import com.atletii.mhpdeskbookingbackend.rooms.mapper.BookingMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.RoomMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.UserMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.BookingEntity;
-import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.RoomEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.repository.BookingRepository;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.BookingEventType;
@@ -45,9 +44,9 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
         return bookingMapper.mapToModels(allBooks);
     }
 
-    public boolean checkIfRoomIsAvailable(RoomEntity room,LocalDateTime bookedFrom, LocalDateTime bookedTo){
+    public boolean checkIfRoomIsAvailable(Room room,LocalDateTime bookedFrom, LocalDateTime bookedTo){
 
-        List<BookingEntity> allRoomBookings = bookingRepository.findAllByByRoomAndTimeRange(room, bookedFrom, bookedTo);
+        List<BookingEntity> allRoomBookings = bookingRepository.findAllByByRoomAndTimeRange(roomMapper.mapToEntity(room), bookedFrom, bookedTo);
         if(allRoomBookings.isEmpty()){
             return true;
         }

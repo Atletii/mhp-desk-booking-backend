@@ -58,6 +58,7 @@ public class RoomService extends BaseEntityService<Room, RoomEntity> {
             List<Booking> bookings = bookingService.getBookingByRoomAndDay(day, room);
 
             RoomAvailabilityDto availabilityDto = new RoomAvailabilityDto();
+            availabilityDto.setId(room.getId());
             availabilityDto.setName(room.getName());
             availabilityDto.setMapId(room.getMapId());
             if (bookings.isEmpty()) {
@@ -67,13 +68,7 @@ public class RoomService extends BaseEntityService<Room, RoomEntity> {
                 LocalTime startTime = LocalTime.of(8, 0);
                 LocalTime endTime = LocalTime.of(20, 0);
                 for (LocalTime time = startTime; time.isBefore(endTime); time = time.plusMinutes(10)) {
-                    boolean slotCovered = false;
-                    for (Booking booking : bookings) {
-                        if (!booking.getBookedFrom().toLocalTime().isAfter(time) && !booking.getBookedTo().toLocalTime().isBefore(time)) {
-                            slotCovered = true;
-                            break;
-                        }
-                    }
+                    boolean slotCovered = bookingService.checkIfRoomIsAvailable(room, day.atTime(time), day.atTime(time.plusMinutes(10)));
                     if (!slotCovered) {
                         isFullyBooked = false;
                         break;

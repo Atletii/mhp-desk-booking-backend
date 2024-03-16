@@ -5,13 +5,13 @@ import com.atletii.mhpdeskbookingbackend.rooms.api.dto.BookingDto;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.NewBookingDto;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.BookingMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.RoomMapper;
-import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.RoomEntity;
-import com.atletii.mhpdeskbookingbackend.rooms.persistance.repository.RoomRepository;
 import com.atletii.mhpdeskbookingbackend.rooms.service.BookingEventService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.BookingService;
+import com.atletii.mhpdeskbookingbackend.rooms.service.RoomService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.UserService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.BookingEventType;
+import com.atletii.mhpdeskbookingbackend.rooms.service.model.Room;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,8 +34,7 @@ import java.util.stream.Collectors;
 public class BookingController extends BaseResource {
 
     private final BookingService bookingService;
-    private final RoomMapper roomMapper;
-    private final RoomRepository roomRepository;
+    private final RoomService roomService;
     private final BookingMapper bookingMapper;
     private final UserService userService;
     private final BookingEventService bookingEventService;
@@ -79,7 +78,7 @@ public class BookingController extends BaseResource {
     @PostMapping("")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookingDto> createBooking(@RequestBody NewBookingDto newBookingDto, @RequestHeader(name = "localId") String token) {
-        Optional<RoomEntity> optionalRoom = roomRepository.findById(newBookingDto.getRoomId()); //check if room exists & available
+        Optional<Room> optionalRoom = roomService.findById(newBookingDto.getRoomId()); //check if room exists & available
         Optional<User> optionalUser = userService.findUserEntityByFirebaseId(token);
 
 
@@ -98,7 +97,7 @@ public class BookingController extends BaseResource {
         if (optionalUser.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            Booking booking = bookingService.createBooking(roomMapper.mapToModel(optionalRoom.get()), optionalUser.get(), newBookingDto.getBookedFrom(), newBookingDto.getBookedTo());
+            Booking booking = bookingService.createBooking(optionalRoom.get(), optionalUser.get(), newBookingDto.getBookedFrom(), newBookingDto.getBookedTo());
             return ResponseEntity.ok().body(bookingMapper.toDto(booking));
         }
     }

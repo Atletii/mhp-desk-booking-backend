@@ -34,8 +34,7 @@ public class RoomController extends BaseResource {
     @GetMapping("/{day}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<RoomAvailabilityDto>> getAllRoomsOnDay(@PathVariable LocalDate day){
-        return  ResponseEntity.ok().body(roomService
-                        .getAllRoomsOnDay(day));
+        return  ResponseEntity.ok().body(roomService.getAllRoomsOnDay(day));
     }
 
     @GetMapping("/addAll")
