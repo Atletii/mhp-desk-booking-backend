@@ -24,6 +24,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -84,10 +85,17 @@ public class BookingController extends BaseResource {
         Optional<RoomEntity> optionalRoom = roomRepository.findById(newBookingDto.getRoomId()); //check if room exists & available
         Optional<User> optionalUser = userService.findUserEntityByFirebaseId(token);
 
+
+
         if (optionalRoom.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         if(!bookingService.checkIfRoomIsAvailable(optionalRoom.get(),newBookingDto.getBookedFrom(),newBookingDto.getBookedTo())){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        try{
+            bookingService.checkIfDateIsCorrect(newBookingDto.getBookedFrom(),newBookingDto.getBookedTo());
+        }catch (InvalidParameterException e){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         if (optionalUser.isEmpty()) {

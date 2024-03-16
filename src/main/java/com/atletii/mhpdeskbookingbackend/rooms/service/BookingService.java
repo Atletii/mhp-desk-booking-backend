@@ -16,8 +16,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +42,7 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
     }
 
     public boolean checkIfRoomIsAvailable(RoomEntity room,LocalDateTime bookedFrom, LocalDateTime bookedTo){
+
         List<BookingEntity> allRoomBookings = bookingRepository.findAllByByRoomAndTimeRange(room, bookedFrom, bookedTo);
         if(allRoomBookings.isEmpty()){
             return true;
@@ -47,6 +50,14 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
         else{
             return false;
         }
+    }
+    public void checkIfDateIsCorrect(LocalDateTime bookedFrom, LocalDateTime bookedTo){
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        LocalTime bookingStartTime = LocalTime.of(8, 0); // Booking can only start from 8 am
+
+        if(!(bookedFrom.toLocalTime().isAfter(bookingStartTime) && bookedFrom.isAfter(currentDateTime)
+                && bookedTo.isAfter(bookedFrom)))
+            throw new InvalidParameterException("Invalid date!");
     }
 
     public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo) {
