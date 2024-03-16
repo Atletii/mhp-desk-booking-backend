@@ -29,9 +29,12 @@ services:
       - DB_PASSWORD=12345678
     networks:
       - mhp-desk-booking-default
-
+    ports:
+      - "8080:8080"
 networks:
   mhp-desk-booking-default:
+  portainer_default:
+    external: true
 
 volumes:
   mhp-desk-booking-database:
