@@ -4,17 +4,20 @@ import com.atletii.mhpdeskbookingbackend.common.api.BaseResource;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.BookingDto;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.NewBookingDto;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.BookingMapper;
+import com.atletii.mhpdeskbookingbackend.rooms.mapper.RoomMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.RoomEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.repository.RoomRepository;
 import com.atletii.mhpdeskbookingbackend.rooms.service.BookingService;
+import com.atletii.mhpdeskbookingbackend.rooms.service.UserService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
+import com.atletii.mhpdeskbookingbackend.rooms.service.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,48 +29,53 @@ import java.util.stream.Collectors;
 public class BookingController extends BaseResource {
 
     private final BookingService bookingService;
+    private final RoomMapper roomMapper;
     private final RoomRepository roomRepository;
     private final BookingMapper bookingMapper;
+    private final UserService userService;
+
+
     @GetMapping("/byDay/{day}")
-    public ResponseEntity<List<BookingDto>> getBookingsByDay(@PathVariable LocalDate day){
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<BookingDto>> getBookingsByDay(@PathVariable LocalDate day) {
         List<Booking> bookingsFromOneDay = bookingService.getBookingByDay(day);
 
         return ResponseEntity.ok()
                 .body(bookingsFromOneDay.stream().map(bookingMapper::toDto).collect(Collectors.toList()));
     }
 
-    //TODO get all bookings
     @GetMapping("/allBookings")
-    public ResponseEntity<List<BookingDto>> getAllBookings(){
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<List<BookingDto>> getAllBookings() {
         List<Booking> allBookings = bookingService.findAll();
         return ResponseEntity.ok()
                 .body(allBookings.stream().map(bookingMapper::toDto).collect(Collectors.toList()));
     }
 
-    //TODO delete booking by  id
-
     @DeleteMapping("/deleteBooking/{bookingId}")
-    public ResponseEntity<?> deleteBooking(@PathVariable UUID bookingId){
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> deleteBooking(@PathVariable UUID bookingId) {
         Optional<Booking> optionalBooking = bookingService.findById(bookingId);
-        if(optionalBooking.isEmpty())
+        if (optionalBooking.isEmpty())
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         else
             bookingService.delete(optionalBooking.get());
         return ResponseEntity.ok().body("Deleted successfully");
-
     }
 
-    //TODO create booking (@RB BookingDto)
     @PostMapping("/createBooking")
-    public ResponseEntity<BookingDto> createBooking(@RequestBody NewBookingDto newBookingDto){
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<BookingDto> createBooking(@RequestBody NewBookingDto newBookingDto, @RequestHeader(name = "Authorization") String token) {
         Optional<RoomEntity> optionalRoom = roomRepository.findById(newBookingDto.getRoomId());
-        if(optionalRoom.isEmpty()){
+        Optional<User> optionalUser = userService.findUserEntityByFirebaseId(token);
+        if (optionalRoom.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        else{
-            Booking booking = bookingService.createBooking(optionalRoom,newBookingDto.getBookedTo(),newBookingDto.getBookedTo());
+        if (optionalUser.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            Booking booking = bookingService.createBooking(roomMapper.mapToModel(optionalRoom.get()), optionalUser.get(), newBookingDto.getBookedTo(), newBookingDto.getBookedTo());
             return ResponseEntity.ok().body(bookingMapper.toDto(booking));
         }
     }
-
 }
