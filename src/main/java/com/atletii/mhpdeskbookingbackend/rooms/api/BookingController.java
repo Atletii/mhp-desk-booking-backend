@@ -53,7 +53,7 @@ public class BookingController extends BaseResource {
         if (optionalUser.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else{
-            Page<Booking> allBookings = bookingService.getBookingsOfUser(optionalUser.get());
+            Page<Booking> allBookings = bookingService.getBookingsOfUser(optionalUser.get(), pageable);
             return ResponseEntity.ok()
                     .body(bookingMapper.mapToDto(allBookings));
         }
