@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class RoomDto extends BaseEntityDto {
+public class RoomAvailabilityDto extends BaseEntityDto{
     private String name;
-    private Integer nrPlaces;
+    private Integer mapId;
 }
