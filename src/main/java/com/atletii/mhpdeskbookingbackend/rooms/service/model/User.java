@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 public class User extends BaseEntityModel {
     private String firstName, lastName, email, firebaseId;
-
+    private UserRole userRole;
 }

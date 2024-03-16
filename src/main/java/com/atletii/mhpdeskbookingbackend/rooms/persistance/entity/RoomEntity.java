@@ -12,5 +12,5 @@ import lombok.Setter;
 @Table(name = "room")
 public class RoomEntity extends BaseEntity {
     private String name;
-    private Integer nrPlaces;
+    private Integer nrPlaces, mapId;
 }
