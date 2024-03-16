@@ -9,6 +9,7 @@ import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Room;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -29,9 +30,9 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
         List<BookingEntity> bookingsFromOneDay= bookingRepository.findAllByBookedFromAfterAndBookedToBefore(day.atStartOfDay(), day.atTime(23,59,59));
         return bookingsFromOneDay.stream().map(bookingMapper::mapToModel).collect(Collectors.toList());
     }
-    public List<Booking> getBookingsOfUser(User user){
-        List<BookingEntity> allBooks = bookingRepository.findBookingEntitiesByUser(userMapper.mapToEntity(user));
-        return  allBooks.stream().map(bookingMapper::mapToModel).collect(Collectors.toList());
+    public Page<Booking> getBookingsOfUser(User user){
+        Page<BookingEntity> allBooks = bookingRepository.findBookingEntitiesByUser(userMapper.mapToEntity(user));
+        return bookingMapper.mapToModel(allBooks);
     }
 
     public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo) {

@@ -12,6 +12,9 @@ import com.atletii.mhpdeskbookingbackend.rooms.service.UserService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,7 +38,7 @@ public class BookingController extends BaseResource {
     private final UserService userService;
 
 
-    @GetMapping("/byDay/{day}")
+    @GetMapping("/{day}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<BookingDto>> getBookingsByDay(@PathVariable LocalDate day) {
         List<Booking> bookingsFromOneDay = bookingService.getBookingByDay(day);
@@ -43,20 +46,20 @@ public class BookingController extends BaseResource {
                 .body(bookingsFromOneDay.stream().map(bookingMapper::toDto).collect(Collectors.toList()));
     }
 
-    @GetMapping("/allBookings")
+    @GetMapping("")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<BookingDto>> getAllBookingsOfUser(@RequestHeader(name = "localId") String token) {
+    public ResponseEntity<Page<BookingDto>> getAllBookingsOfUser(@PageableDefault Pageable pageable, @RequestHeader(name = "localId") String token) {
         Optional<User> optionalUser = userService.findUserEntityByFirebaseId(token);
         if (optionalUser.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else{
-            List<Booking> allBookings = bookingService.getBookingsOfUser(optionalUser.get());
+            Page<Booking> allBookings = bookingService.getBookingsOfUser(optionalUser.get());
             return ResponseEntity.ok()
-                    .body(allBookings.stream().map(bookingMapper::toDto).collect(Collectors.toList()));
+                    .body(bookingMapper.mapToDto(allBookings));
         }
     }
 
-    @DeleteMapping("/deleteBooking/{bookingId}")
+    @DeleteMapping("/{bookingId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> deleteBooking(@PathVariable UUID bookingId) {
         Optional<Booking> optionalBooking = bookingService.findById(bookingId);
@@ -67,7 +70,7 @@ public class BookingController extends BaseResource {
         return ResponseEntity.ok().body("Deleted successfully");
     }
 
-    @PostMapping("/createBooking")
+    @PostMapping("")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<BookingDto> createBooking(@RequestBody NewBookingDto newBookingDto, @RequestHeader(name = "localId") String token) {
         Optional<RoomEntity> optionalRoom = roomRepository.findById(newBookingDto.getRoomId());
