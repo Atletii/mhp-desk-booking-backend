@@ -1,6 +1,5 @@
 package com.atletii.mhpdeskbookingbackend.rooms.service;
 
-import com.atletii.mhpdeskbookingbackend.common.mapper.BaseModelEntityMapper;
 import com.atletii.mhpdeskbookingbackend.common.service.BaseEntityService;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.UserMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.UserEntity;

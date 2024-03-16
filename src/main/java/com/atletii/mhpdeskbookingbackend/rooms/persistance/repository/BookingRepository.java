@@ -4,8 +4,6 @@ import com.atletii.mhpdeskbookingbackend.common.persistence.BaseRepository;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.BookingEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.RoomEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.UserEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;

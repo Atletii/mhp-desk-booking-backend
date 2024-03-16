@@ -6,8 +6,6 @@ import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.BookingEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import java.util.List;
 
