@@ -39,17 +39,21 @@ public class BookingController extends BaseResource {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<BookingDto>> getBookingsByDay(@PathVariable LocalDate day) {
         List<Booking> bookingsFromOneDay = bookingService.getBookingByDay(day);
-
         return ResponseEntity.ok()
                 .body(bookingsFromOneDay.stream().map(bookingMapper::toDto).collect(Collectors.toList()));
     }
 
     @GetMapping("/allBookings")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<BookingDto>> getAllBookings() {
-        List<Booking> allBookings = bookingService.findAll();
-        return ResponseEntity.ok()
-                .body(allBookings.stream().map(bookingMapper::toDto).collect(Collectors.toList()));
+    public ResponseEntity<List<BookingDto>> getAllBookingsOfUser(@RequestHeader(name = "Authorization") String token) {
+        Optional<User> optionalUser = userService.findUserEntityByFirebaseId(token);
+        if (optionalUser.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else{
+            List<Booking> allBookings = bookingService.getBookingsOfUser(optionalUser.get());
+            return ResponseEntity.ok()
+                    .body(allBookings.stream().map(bookingMapper::toDto).collect(Collectors.toList()));
+        }
     }
 
     @DeleteMapping("/deleteBooking/{bookingId}")

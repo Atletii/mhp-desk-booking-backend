@@ -2,6 +2,7 @@ package com.atletii.mhpdeskbookingbackend.rooms.service;
 
 import com.atletii.mhpdeskbookingbackend.common.service.BaseEntityService;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.BookingMapper;
+import com.atletii.mhpdeskbookingbackend.rooms.mapper.UserMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.BookingEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.repository.BookingRepository;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
@@ -20,12 +21,17 @@ import java.util.stream.Collectors;
 public class BookingService extends BaseEntityService<Booking, BookingEntity> {
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
+    private final UserMapper userMapper;
 
 
     public List<Booking> getBookingByDay(LocalDate day){
 
         List<BookingEntity> bookingsFromOneDay= bookingRepository.findAllByBookedFromAfterAndBookedToBefore(day.atStartOfDay(), day.atTime(23,59,59));
         return bookingsFromOneDay.stream().map(bookingMapper::mapToModel).collect(Collectors.toList());
+    }
+    public List<Booking> getBookingsOfUser(User user){
+        List<BookingEntity> allBooks = bookingRepository.findBookingEntitiesByUser(userMapper.mapToEntity(user));
+        return  allBooks.stream().map(bookingMapper::mapToModel).collect(Collectors.toList());
     }
 
     public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo) {
