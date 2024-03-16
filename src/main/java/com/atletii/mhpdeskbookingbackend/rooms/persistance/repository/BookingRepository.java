@@ -18,6 +18,7 @@ public interface BookingRepository extends BaseRepository<BookingEntity> {
      List<BookingEntity> findAllByBookedFrom(LocalDateTime bookedFrom);
      List<BookingEntity> findAllByBookedFromAfterAndBookedToBefore(LocalDateTime bookedFrom, LocalDateTime bookedTo);
      List<BookingEntity> findBookingEntitiesByUser(UserEntity user);
+     List<BookingEntity> findBookingEntitiesByRoom(RoomEntity room);
 
      //all Bookings from one room in a timeStamp
      @Query("SELECT b FROM BookingEntity b WHERE ((b.bookedFrom <= :to AND b.bookedTo >= :to) " +

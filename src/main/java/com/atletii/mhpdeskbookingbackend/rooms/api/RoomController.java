@@ -1,22 +1,22 @@
 package com.atletii.mhpdeskbookingbackend.rooms.api;
 
 import com.atletii.mhpdeskbookingbackend.common.api.BaseResource;
-import com.atletii.mhpdeskbookingbackend.rooms.api.dto.RoomAvailability;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.RoomAvailabilityDto;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.RoomDto;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.RoomMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.service.RoomService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Room;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,20 +25,17 @@ public class RoomController extends BaseResource {
     private final RoomService roomService;
     private final RoomMapper roomMapper;
 
-    @GetMapping("/available/{day}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<RoomAvailability> getRoomAvailabilityPerDay(@PathVariable LocalDate day, @RequestHeader(name="Authorization") String token){
-        return new ResponseEntity<>(roomService.getRoomAvailability(day), HttpStatus.OK);
-    }
+//    @GetMapping("/available/{day}")
+//    @PreAuthorize("isAuthenticated()")
+//    public ResponseEntity<RoomAvailability> getRoomAvailabilityPerDay(@PathVariable LocalDate day, @RequestHeader(name="Authorization") String token){
+//        return new ResponseEntity<>(roomService.getRoomAvailability(day), HttpStatus.OK);
+//    }
 
-    @GetMapping("/allRooms")
+    @GetMapping("/{day}")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<RoomAvailabilityDto>> getAllRooms(@RequestHeader(name="Authorization") String token){
+    public ResponseEntity<List<RoomAvailabilityDto>> getAllRoomsOnDay(@PathVariable LocalDate day){
         return  ResponseEntity.ok().body(roomService
-                .findAll()
-                .stream()
-                .map(roomMapper::toDto)
-                .collect(Collectors.toList()));
+                        .getAllRoomsOnDay(day));
     }
 
     @GetMapping("/addAll")
@@ -178,8 +175,16 @@ public class RoomController extends BaseResource {
                 new RoomDto("CLUJ_5_beta_33.1", 64, 1),
                 new RoomDto("CLUJ_5_beta_33.2", 115, 1),
                 new RoomDto("CLUJ_5_beta_33.3", 58, 1),
-                new RoomDto("CLUJ_5_beta_33.4", 61, 1)
-        ));
+                new RoomDto("CLUJ_5_beta_33.4", 61, 1),
+
+                new RoomDto("Pit-Lane", 421, 4),
+                new RoomDto("Dry-lane", 424, 4),
+                new RoomDto("Joker Lap", 427, 4),
+                new RoomDto("Quick 8", 13, 8),
+                new RoomDto("Pole Position", 418, 20),
+                new RoomDto("Cockpit", 415, 10)
+
+                ));
         roomDtos.forEach(r->{roomService.save(new Room(r.getName(), r.getNrPlaces(), r.getMapId()));});
     }
 }

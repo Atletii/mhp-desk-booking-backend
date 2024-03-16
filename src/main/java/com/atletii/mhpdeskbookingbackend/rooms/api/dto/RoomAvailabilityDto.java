@@ -9,4 +9,5 @@ import lombok.Setter;
 public class RoomAvailabilityDto extends BaseEntityDto{
     private String name;
     private Integer mapId;
+    private RoomAvailability availability;
 }
