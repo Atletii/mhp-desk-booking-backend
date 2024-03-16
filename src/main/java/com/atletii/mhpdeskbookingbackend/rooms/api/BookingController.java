@@ -59,7 +59,7 @@ public class BookingController extends BaseResource {
         }
     }
 
-    @DeleteMapping("/{bookingId}")
+    @DeleteMapping("/id/{bookingId}")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<?> deleteBooking(@PathVariable UUID bookingId) {
         Optional<Booking> optionalBooking = bookingService.findById(bookingId);
