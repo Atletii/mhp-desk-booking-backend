@@ -8,6 +8,7 @@ import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.BookingEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.entity.RoomEntity;
 import com.atletii.mhpdeskbookingbackend.rooms.persistance.repository.BookingRepository;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Booking;
+import com.atletii.mhpdeskbookingbackend.rooms.service.model.BookingEventType;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.Room;
 import com.atletii.mhpdeskbookingbackend.rooms.service.model.User;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
     private final BookingRepository bookingRepository;
     private final BookingMapper bookingMapper;
     private final UserMapper userMapper;
-
+    private final BookingEventService bookingEventService;
 
     public List<Booking> getBookingByDay(LocalDate day){
 
@@ -50,7 +51,10 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
 
     public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo) {
         Booking booking = new Booking(roomToBook, user, bookedFrom, bookedTo);
-        return this.save(booking);
+
+        Booking saved = this.save(booking);
+        bookingEventService.sendBundleEvent(saved, BookingEventType.RESERVATION);
+        return saved;
     }
 
     @Override

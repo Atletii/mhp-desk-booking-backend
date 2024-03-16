@@ -27,9 +27,10 @@ public class BookingEventService extends BaseService {
         subscribers.remove(sseEmitter);
     }
 
-    public void sendBundleEvent(String text, Booking booking, BookingEventType type) {
+    public void sendBundleEvent(Booking booking, BookingEventType type) {
         BookingEventDto bookingEventDto = new BookingEventDto();
         bookingEventDto.setBooking(booking);
+        bookingEventDto.setBookingEventType(type);
 
         for (int i = 0; i < subscribers.size(); i++) {
             try {
