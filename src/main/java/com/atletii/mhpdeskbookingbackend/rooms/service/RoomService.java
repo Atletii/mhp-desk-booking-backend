@@ -64,6 +64,7 @@ public class RoomService extends BaseEntityService<Room, RoomEntity> {
             availabilityDto.setId(room.getId());
             availabilityDto.setName(room.getName());
             availabilityDto.setMapId(room.getMapId());
+            availabilityDto.setNrPlaces(room.getNrPlaces());
             if (bookings.isEmpty()) {
                 availabilityDto.setAvailability(RoomAvailability.FREE);
             } else {
