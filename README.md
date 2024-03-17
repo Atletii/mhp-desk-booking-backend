@@ -11,6 +11,9 @@ This document outlines the backend architecture of the MHP Desk Booking Applicat
 * Postgres for Database
 * Maven for Dependency Management
 
+## Complete List of URL Paths from Swagger UI
+`http://localhost:8080/swagger-ui/`
+
 ## Prerequisites
 
 - JDK 17 or later
