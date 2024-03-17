@@ -103,7 +103,6 @@ public class BookingController extends BaseResource {
     }
 
     @GetMapping(path = "/events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    @PreAuthorize("isAuthenticated()")
     public SseEmitter getBundleEventStream() {
         SseEmitter emitter = new SseEmitter(-1L);
         bookingEventService.subscribe(emitter);
