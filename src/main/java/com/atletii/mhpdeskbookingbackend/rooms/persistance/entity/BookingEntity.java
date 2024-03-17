@@ -21,4 +21,7 @@ public class BookingEntity extends BaseEntity {
     private UserEntity user;
 
     private LocalDateTime bookedTo, bookedFrom;
+
+    private Integer members;
+
 }

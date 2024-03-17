@@ -4,7 +4,6 @@ import com.atletii.mhpdeskbookingbackend.common.api.BaseResource;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.BookingDto;
 import com.atletii.mhpdeskbookingbackend.rooms.api.dto.NewBookingDto;
 import com.atletii.mhpdeskbookingbackend.rooms.mapper.BookingMapper;
-import com.atletii.mhpdeskbookingbackend.rooms.mapper.RoomMapper;
 import com.atletii.mhpdeskbookingbackend.rooms.service.BookingEventService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.BookingService;
 import com.atletii.mhpdeskbookingbackend.rooms.service.RoomService;
@@ -97,7 +96,7 @@ public class BookingController extends BaseResource {
         if (optionalUser.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            Booking booking = bookingService.createBooking(optionalRoom.get(), optionalUser.get(), newBookingDto.getBookedFrom(), newBookingDto.getBookedTo());
+            Booking booking = bookingService.createBooking(optionalRoom.get(), optionalUser.get(), newBookingDto.getBookedFrom(), newBookingDto.getBookedTo(), newBookingDto.getMembers());
             return ResponseEntity.ok().body(bookingMapper.toDto(booking));
         }
     }

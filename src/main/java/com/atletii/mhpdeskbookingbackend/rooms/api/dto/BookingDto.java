@@ -11,4 +11,5 @@ import java.time.LocalDateTime;
 public class BookingDto extends BaseEntityDto {
     private String room;
     private LocalDateTime bookedTo, bookedFrom;
+    private Integer members;
 }

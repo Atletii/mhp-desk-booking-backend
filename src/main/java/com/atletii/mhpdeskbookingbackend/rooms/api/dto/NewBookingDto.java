@@ -11,4 +11,5 @@ import java.util.UUID;
 public class NewBookingDto {
     private UUID roomId;
     private LocalDateTime bookedTo, bookedFrom;
+    private Integer members;
 }

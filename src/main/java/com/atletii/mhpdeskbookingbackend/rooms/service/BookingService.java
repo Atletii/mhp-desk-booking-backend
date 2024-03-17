@@ -57,8 +57,8 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
             throw new InvalidParameterException("Invalid date!");
     }
 
-    public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo) {
-        Booking booking = new Booking(roomToBook, user, bookedTo, bookedFrom);
+    public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo, Integer members) {
+        Booking booking = new Booking(roomToBook, user, bookedTo, bookedFrom, members);
 
         Booking saved = this.save(booking);
         bookingEventService.sendBundleEvent(saved, BookingEventType.RESERVATION);

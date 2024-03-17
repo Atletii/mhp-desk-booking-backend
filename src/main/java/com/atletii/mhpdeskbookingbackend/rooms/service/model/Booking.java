@@ -16,4 +16,7 @@ public class Booking extends BaseEntityModel {
     private User user;
 
     private LocalDateTime bookedTo, bookedFrom;
+
+    private Integer members;
+
 }
