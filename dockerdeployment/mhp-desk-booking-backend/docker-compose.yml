@@ -1,0 +1,45 @@
+version: "2"
+
+services:
+
+  mhp-desk-booking-database:
+    image: postgres:15.3
+    container_name: mhp-desk-booking-database
+    restart: unless-stopped
+    hostname: mhp-desk-booking-db
+    environment:
+      - POSTGRES_DB=mhp-desk-booking
+      - POSTGRES_USER=mhp-desk-booking
+      - POSTGRES_PASSWORD=12345678
+    volumes:
+      - mhp-desk-booking-database:/var/lib/postgresql/data
+    networks:
+      - mhp-desk-booking-default
+
+  mhp-desk-booking-backend:
+    image: mhp-desk-booking-backend
+    container_name: mhp-desk-booking-backend
+    restart: unless-stopped
+    environment:
+      - SPRING_PROFILE=docker
+      - DB_HOST=mhp-desk-booking-db
+      - DB_PORT=5432
+      - DB_SCHEMA=mhp-desk-booking
+      - DB_USERNAME=mhp-desk-booking
+      - DB_PASSWORD=12345678
+    networks:
+      - mhp-desk-booking-default
+      - traefik_default
+    labels:
+      - "traefik.http.services.mhp-desk-booking-backend-api.loadbalancer.server.port=8080"
+      - "traefik.enable=true"
+      - "traefik.http.routers.mhp-desk-booking-backend.rule=Host(`mhp-desk-booking-backend.galitianu.com`)"
+      - "traefik.http.routers.mhp-desk-booking-backend.entrypoints=websecure"
+      - "traefik.http.routers.mhp-desk-booking-backend.tls.certresolver=myresolver"
+networks:
+  mhp-desk-booking-default:
+  traefik_default:
+    external: true
+
+volumes:
+  mhp-desk-booking-database:

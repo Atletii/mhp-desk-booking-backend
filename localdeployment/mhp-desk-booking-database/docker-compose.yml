@@ -1,0 +1,21 @@
+version: "2"
+
+services:
+
+  mhp-desk-booking-database-local:
+    image: postgres:15.3
+    container_name: mhp-desk-booking-database-local
+    restart: unless-stopped
+    ports:
+      - "63500:5432"
+    environment:
+      - POSTGRES_DB=mhp-desk-booking
+      - POSTGRES_USER=mhp-desk-booking
+      - POSTGRES_PASSWORD=12345678
+      - TZ=UTC
+      - PGTZ=UTC
+    volumes:
+      - mhp-desk-booking:/var/lib/postgresql/data
+
+volumes:
+  mhp-desk-booking:
