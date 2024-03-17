@@ -45,20 +45,20 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
     }
 
     public boolean checkIfRoomIsAvailable(Room room,LocalDateTime bookedFrom, LocalDateTime bookedTo){
-        List<BookingEntity> allRoomBookings = bookingRepository.findAllByByRoomAndTimeRange(roomMapper.mapToEntity(room), bookedFrom, bookedTo);
+        List<BookingEntity> allRoomBookings = bookingRepository.findAllByRoomAndTimeRange(roomMapper.mapToEntity(room), bookedFrom, bookedTo);
         return allRoomBookings.isEmpty();
     }
     public void checkIfDateIsCorrect(LocalDateTime bookedFrom, LocalDateTime bookedTo){
         LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalTime bookingStartTime = LocalTime.of(8, 0); // Booking can only start from 8 am
+        LocalTime bookingStartTime = LocalTime.of(7, 59); // Booking can only start from 8 am
 
-        if(!(bookedFrom.toLocalTime().isAfter(bookingStartTime) && bookedFrom.isAfter(currentDateTime)
+        if(!(bookedFrom.toLocalTime().isAfter(bookingStartTime)
                 && bookedTo.isAfter(bookedFrom)))
             throw new InvalidParameterException("Invalid date!");
     }
 
     public Booking createBooking(Room roomToBook, User user, LocalDateTime bookedFrom, LocalDateTime bookedTo) {
-        Booking booking = new Booking(roomToBook, user, bookedFrom, bookedTo);
+        Booking booking = new Booking(roomToBook, user, bookedTo, bookedFrom);
 
         Booking saved = this.save(booking);
         bookingEventService.sendBundleEvent(saved, BookingEventType.RESERVATION);
