@@ -45,14 +45,8 @@ public class BookingService extends BaseEntityService<Booking, BookingEntity> {
     }
 
     public boolean checkIfRoomIsAvailable(Room room,LocalDateTime bookedFrom, LocalDateTime bookedTo){
-
         List<BookingEntity> allRoomBookings = bookingRepository.findAllByByRoomAndTimeRange(roomMapper.mapToEntity(room), bookedFrom, bookedTo);
-        if(allRoomBookings.isEmpty()){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return allRoomBookings.isEmpty();
     }
     public void checkIfDateIsCorrect(LocalDateTime bookedFrom, LocalDateTime bookedTo){
         LocalDateTime currentDateTime = LocalDateTime.now();

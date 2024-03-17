@@ -13,8 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.chrono.ChronoLocalDate;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -64,17 +67,8 @@ public class RoomService extends BaseEntityService<Room, RoomEntity> {
             if (bookings.isEmpty()) {
                 availabilityDto.setAvailability(RoomAvailability.FREE);
             } else {
-                boolean isFullyBooked = true;
-                LocalTime startTime = LocalTime.of(8, 0);
-                LocalTime endTime = LocalTime.of(20, 0);
-                for (LocalTime time = startTime; time.isBefore(endTime); time = time.plusMinutes(10)) {
-                    boolean slotCovered = bookingService.checkIfRoomIsAvailable(room, day.atTime(time), day.atTime(time.plusMinutes(10)));
-                    if (!slotCovered) {
-                        isFullyBooked = false;
-                        break;
-                    }
-                }
-                availabilityDto.setAvailability(isFullyBooked ? RoomAvailability.FULLY_BLOCKED : RoomAvailability.PARTLY_BLOCKED);
+               Optional<Booking> a = bookings.stream().filter(b -> b.getBookedFrom().toLocalTime().equals(LocalTime.of(8, 0)) && b.getBookedTo().toLocalTime().equals(LocalTime.of(20,0))).findAny();
+                availabilityDto.setAvailability(a.isEmpty()? RoomAvailability.PARTLY_BLOCKED: RoomAvailability.FULLY_BLOCKED );
             }
             availabilities.add(availabilityDto);
         });
