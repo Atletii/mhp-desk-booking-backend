@@ -85,7 +85,8 @@ public class BookingController extends BaseResource {
         if (optionalRoom.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if(!bookingService.checkIfRoomIsAvailable(optionalRoom.get(),newBookingDto.getBookedFrom(),newBookingDto.getBookedTo())){
+        if(!bookingService.checkIfRoomIsAvailable(optionalRoom.get(),newBookingDto.getBookedFrom(),newBookingDto.getBookedTo()) ||
+        newBookingDto.getMembers() < optionalRoom.get().getNrPlaces()/2){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         try{
