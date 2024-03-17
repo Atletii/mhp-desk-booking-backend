@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 public class RoomAvailabilityDto extends BaseEntityDto{
     private String name;
-    private Integer mapId;
+    private Integer mapId, nrPlaces;
     private RoomAvailability availability;
 }
