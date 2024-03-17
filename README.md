@@ -12,7 +12,7 @@ This document outlines the backend architecture of the MHP Desk Booking Applicat
 * Maven for Dependency Management
 
 ## Complete List of URL Paths from Swagger UI
-`[http://localhost:8080/swagger-ui/](https://mhp-desk-booking-backend.galitianu.com/swagger-ui/index.html)`
+https://mhp-desk-booking-backend.galitianu.com/swagger-ui/index.html
 
 ## Prerequisites
 
